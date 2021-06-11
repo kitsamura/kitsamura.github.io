@@ -64,14 +64,12 @@
         },
         methods: {
             openModal() {
-                console.log('modal open');
                 this.modalIsOpen = true;
             },
             closeModal() {
                 this.modalIsOpen = false;
             },
             addElem(elem) {
-                console.log(elem);
                 this.elems.push(elem);
                 this.saveElems();
             },

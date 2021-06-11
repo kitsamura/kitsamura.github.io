@@ -52,11 +52,9 @@
         },
         methods: {
             closeModal() {
-                console.log('modal closed')
                 this.$emit('closeModal')
             },
             onSubmit() {
-                console.log('info', this.name, this.phone, this.chief)
                 this.$emit('onSubmit')
                 this.$emit('closeModal')
                 if (this.name.trim() && this.phone.trim() && (this.name.length > 0) && (this.phone.length > 0)) {
@@ -79,7 +77,6 @@
                 }
             },
             addChief(value) {
-                console.log(value);
                 this.chief = value;
             }
         }

@@ -21,7 +21,6 @@
     },
     methods: {
       clickOption(value) {
-        console.log(value)
         this.$emit('addChief', value)
       }
     }
