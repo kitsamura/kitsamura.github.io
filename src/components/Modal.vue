@@ -44,7 +44,7 @@
                 chief: '',
                 name: '',
                 phone: '',
-                selected: 'Select', 
+                selected: 'Выберите начальника', 
             }
         },
         computed: {

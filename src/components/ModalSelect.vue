@@ -1,8 +1,8 @@
 <template>
   <div class="modal__select">
-    <p class="modal__select_title" @click="areOptionsVisible = !areOptionsVisible">{{selected}}</p>
-      <div class="modal__select_options"
-      v-if="areOptionsVisible">
+    <p class="modal__select_title" @click="areOptionsVisible = !areOptionsVisible">{{selected}} <i
+        class="material-icons modal__select_icon">expand_more</i></p>
+    <div class="modal__select_options" v-if="areOptionsVisible">
       <p class="modal__select_option" v-for="option in options" :key="option.id" @click="selectOption(option)">
         {{option.name}}
       </p>
@@ -26,7 +26,7 @@
     },
     data() {
       return {
-        areOptionsVisible: false, 
+        areOptionsVisible: false,
       }
     },
     methods: {
@@ -52,13 +52,10 @@
 
   .modal__select_options {
     position: absolute;
-    top: 20px;
+    top: 41px;
     width: 100%;
-    /* left: 0;
-    right: 0; */
-    border: 1px solid #aeaeae;
-    /* margin-top: -1px; */
-    max-height: 160px;
+    border: 1px solid #f4f4f4;
+    max-height: 124px;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
     z-index: 100;
@@ -68,54 +65,50 @@
   }
 
   .modal__select_title {
-        border: 1px solid #aeaeae;
+    position: relative;
+    border: 1px solid #f4f4f4;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin: 0px;
+    height: 42px;
+    padding: 8px 0px 0px 15px;
+    margin-top: 2px;
+    text-align: left;
+    width: 100%;
+    font-size: 20px;
+    line-height: 25px;
+    color: var(--text-color);
+    font-weight: var(--text-light);
+    font-family: var(--font);
   }
 
-  /* .open-top .multiselect-options {
+  .modal__select_icon {
+    position: absolute;
+    right: 7px;
+    top: 8px;
+  }
 
+  .open-top {
     transform: translateY(-100%);
     top: 2px;
     flex-direction: column-reverse
-  } */
+  }
 
   .modal__select_option {
     display: flex;
-    min-height: 10px;
+    min-height: 40px;
+    margin: 0px;
     padding: 9px 12px;
     box-sizing: border-box;
-    color: #000000;
-    /* text-decoration: none; */
+    color: var(--text-color);
+    font-weight: 300;
     align-items: center;
     justify-content: flex-start;
     text-align: left;
     cursor: pointer;
   }
-
-  /* .multiselect-option.is-pointed {
-    background: #e6e6e6
-  } */
   .modal__select_option:hover {
     background: #ededff;
-    color: #ffffff;
-  }
-
-  @-webkit-keyframes spinning {
-    0% {
-      transform: rotate(0)
-    }
-
-    to {
-      transform: rotate(2turn)
-    }
-  }
-
-  @keyframes spinning {
-    0% {
-      transform: rotate(0)
-    }
-
-    to {
-      transform: rotate(2turn)
-    }
+    color:var(--text-color);
   }
 </style>
