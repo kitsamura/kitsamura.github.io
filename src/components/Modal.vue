@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div class="form__item_wrapper">
-                    <div class="form__item">
+                    <div class="form__item" @keypress="btnChange">
                         <label class="form__item_lbl">Имя</label>
                         <input class="form__item_text" type="text" v-model="name" placeholder="Введите имя" minlength=2>
                     </div>
@@ -20,12 +20,12 @@
                     <div class="form__item">
                         <label class="form__item_lbl" for="">Телефон</label>
                         <input class="form__item_phone" v-model="phone" @keypress="isNumber($event)"
-                            placeholder="Введите телефон" type="phone" maxlength=11 minlength=11>
+                            placeholder="Введите телефон" type="phone" maxlength=11 minlength=11 @keyup="btnChange">
                     </div>
                 </div>
             </div>
             <div class="form__add_btn_flex">
-                <button type="submit" class="form__add_btn">
+                <button :disabled=" isDisabled" :class="{disabled: isDisabled}" type="submit" class="form__add_btn">
                     Сохранить
                 </button>
             </div>
@@ -45,42 +45,47 @@
                 phone: '',
             }
         },
-        props: ['elems'],
-        components: {
-            ModalSelect,
-            Close,
-        },
-        methods: {
-            closeModal() {
-                this.$emit('closeModal')
+        computed: {
+            isDisabled: function () {
+                return !(this.name && this.phone);
+            }},
+            props: ['elems'],
+            components: {
+                ModalSelect,
+                Close,
             },
-            onSubmit() {
-                this.$emit('onSubmit')
-                this.$emit('closeModal')
-                if (this.name.trim() && this.phone.trim() && (this.name.length > 0) && (this.phone.length > 0)) {
-                    const newElem = {
-                        id: Date.now(),
-                        name: this.name,
-                        phone: this.phone,
-                        chief: this.chief
+            methods: {
+                closeModal() {
+                    this.$emit('closeModal')
+                },
+                onSubmit() {
+                    this.$emit('onSubmit')
+                    this.$emit('closeModal')
+                    if (this.name.trim() && this.phone.trim() && (this.name.length > 0) && (this.phone.length > 0)) {
+
+                        const newElem = {
+                            id: Date.now(),
+                            name: this.name,
+                            phone: this.phone,
+                            chief: this.chief
+                        }
+                        this.$emit('addElem', newElem)
                     }
-                    this.$emit('addElem', newElem)
+                },
+                isNumber(evt) {
+                    evt = (evt) ? evt : window.event;
+                    var charCode = (evt.which) ? evt.which : evt.keyCode;
+                    if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                        evt.preventDefault();
+                    } else {
+                        return true;
+                    }
+                },
+                addChief(value) {
+                    this.chief = value;
                 }
-            },
-            isNumber(evt) {
-                evt = (evt) ? evt : window.event;
-                var charCode = (evt.which) ? evt.which : evt.keyCode;
-                if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-                    evt.preventDefault();
-                } else {
-                    return true;
-                }
-            },
-            addChief(value) {
-                this.chief = value;
             }
         }
-    }
 </script>
 
 <style>
@@ -155,6 +160,10 @@
     .form__item_text::placeholder {
         font-family: var(--font);
         font-weight: var(--text-light);
+    }
+
+    .disabled {
+        opacity: 0.5;
     }
 
     .form__item_phone:focus,

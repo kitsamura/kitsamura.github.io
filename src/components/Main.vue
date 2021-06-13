@@ -8,14 +8,17 @@
                         <div class="table__el_title table__main_el">
                             <div class="table__el_name table__el_name_sort bold" @click="sortElem">
                                 Имя
-                                <i class="material-icons icon_sort">unfold_more</i>
+                                <i class="material-icons icon_sort" v-if="sortedName">expand_more</i>
+                                <i class="material-icons icon_sort" v-if="unsortedName">expand_less</i>
                             </div>
-                            <div class="table__el_phone bold">
+                            <div class="table__el_phone bold table__el_name_sort bold" @click="sortPhone">
                                 Телефон
+                                <i class="material-icons icon_sort" v-if="sortedPhone">expand_more</i>
+                                <i class="material-icons icon_sort" v-if="unsortedPhone">expand_less</i>
                             </div>
                         </div>
-                        <Element v-for="(elem) in elems" v-bind:key="elem.id" v-bind:name="elem.name"
-                            v-bind:phone="elem.phone" v-bind:chief="elem.chief" />
+                        <Element v-for="(elem) in elems" :key="elem.id" :name="elem.name"
+                            :phone="elem.phone" :chief="elem.chief" :children="elem.children" />
                     </div>
                     <Btn @click="openModal" />
                 </div>
@@ -35,11 +38,27 @@
         data() {
             return {
                 modalIsOpen: false,
+                sortedName: true,
+                unsortedName: false,
+                sortedPhone: true,
+                unsortedPhone: false,
                 elems: [{
                         id: 1,
                         name: 'Алексей',
                         phone: '89063457854',
-                        chief: ''
+                        chief: '',
+                        children: [{
+                            id: 10,
+                            name: 'Камиль',
+                            phone: '89999990002',
+                            chief: 'Алексей',
+                            children: [{
+                            id: 10,
+                            name: 'Камиль',
+                            phone: '89999990002',
+                            chief: 'Алексей',
+                            }]
+                        }],
                     },
                     {
                         id: 2,
@@ -78,6 +97,14 @@
                 localStorage.setItem('elems', parsed);
             },
             sortElem() {
+                function compareReverse(b, a) {
+                    if (a.name < b.name)
+                        return -1;
+                    if (a.name > b.name)
+                        return 1;
+                    return 0;
+                }
+
                 function compare(a, b) {
                     if (a.name < b.name)
                         return -1;
@@ -85,7 +112,41 @@
                         return 1;
                     return 0;
                 }
-                this.elems.sort(compare)
+                if (this.sortedName) {
+                    this.sortedName = false;
+                    this.unsortedName = true;
+                    this.elems.sort(compare)
+                } else {
+                    this.sortedName = true;
+                    this.unsortedName = false;
+                    this.elems.sort(compareReverse);
+                }
+            },
+            sortPhone() {
+                function compareReverse(b, a) {
+                    if (a.phone < b.phone)
+                        return -1;
+                    if (a.phone > b.phone)
+                        return 1;
+                    return 0;
+                }
+
+                function compare(a, b) {
+                    if (a.phone < b.phone)
+                        return -1;
+                    if (a.phone > b.phone)
+                        return 1;
+                    return 0;
+                }
+                if (this.sortedPhone) {
+                    this.sortedPhone = false;
+                    this.unsortedPhone = true;
+                    this.elems.sort(compareReverse)
+                } else {
+                    this.sortedPhone = true;
+                    this.unsortedPhone = false;
+                    this.elems.sort(compare);
+                }
             }
         },
         mounted() {
