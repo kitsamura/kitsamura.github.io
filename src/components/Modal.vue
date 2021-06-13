@@ -7,7 +7,7 @@
                 <div class="form__item_wrapper">
                     <label class="form__item_lbl" for="">Начальник</label>
                     <div class="form__item form__select_wrapper">
-                        <ModalSelect v-bind:elems="elems" @addChief="addChief" v-model="chief" />
+                        <ModalSelect :options="elems" :selected="selected " @selectedOption="selectedOption" @addChief="addChief" v-model="chief"/>
                     </div>
                 </div>
                 <div class="form__item_wrapper">
@@ -38,18 +38,19 @@
     import ModalSelect from './ModalSelect'
 
     export default {
+        props: ['elems'],
         data() {
             return {
                 chief: '',
                 name: '',
                 phone: '',
+                selected: 'Select', 
             }
         },
         computed: {
             isDisabled: function () {
                 return !(this.name && this.phone);
             }},
-            props: ['elems'],
             components: {
                 ModalSelect,
                 Close,
@@ -83,6 +84,10 @@
                 },
                 addChief(value) {
                     this.chief = value;
+                },
+                selectedOption(option) {
+                    this.selected=option.name;
+                    console.log(this.selected);
                 }
             }
         }

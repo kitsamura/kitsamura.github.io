@@ -24,7 +24,7 @@
                 </div>
             </div>
         </main>
-        <Modal v-bind:elems="elems" v-if="modalIsOpen" @closeModal="closeModal" @addElem="addElem" />
+        <Modal :elems="elems" v-if="modalIsOpen" @closeModal="closeModal" @addElem="addElem" />
     </div>
 </template>
 
