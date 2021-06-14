@@ -9,10 +9,10 @@
             </div>
         </div>
         <template v-if="children">
-                <div class="uuu">
+            <div class="uuu">
                 <Element v-for="child in children" :key="child.id" :name="child.name" :phone="child.phone"
-                :chief="child.chief" :children="child.children" />
-                </div>
+                    :chief="child.chief" :children="child.children" />
+            </div>
         </template>
     </div>
 </template>
@@ -28,7 +28,7 @@
 </script>
 
 <style scoped>
-    .uuu{
-        padding-left: 10px;
+    .uuu {
+        padding-left: 20px;
     }
 </style>

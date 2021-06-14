@@ -7,7 +7,8 @@
                 <div class="form__item_wrapper">
                     <label class="form__item_lbl" for="">Начальник</label>
                     <div class="form__item form__select_wrapper">
-                        <ModalSelect :options="elems" :selected="selected " @selectedOption="selectedOption" @addChief="addChief" v-model="chief"/>
+                        <ModalSelect :options="elems" :children="children" :selected="selected "
+                            @selectedOption="selectedOption" @selectedChild="selectedChild" v-model="chief" />
                     </div>
                 </div>
                 <div class="form__item_wrapper">
@@ -38,59 +39,62 @@
     import ModalSelect from './ModalSelect'
 
     export default {
-        props: ['elems'],
+        props: ['elems', 'children'],
         data() {
             return {
                 chief: '',
                 name: '',
                 phone: '',
-                selected: 'Выберите начальника', 
+                selected: 'Выберите начальника',
             }
         },
         computed: {
             isDisabled: function () {
                 return !(this.name && this.phone);
-            }},
-            components: {
-                ModalSelect,
-                Close,
-            },
-            methods: {
-                closeModal() {
-                    this.$emit('closeModal')
-                },
-                onSubmit() {
-                    this.$emit('onSubmit')
-                    this.$emit('closeModal')
-                    if (this.name.trim() && this.phone.trim() && (this.name.length > 0) && (this.phone.length > 0)) {
-
-                        const newElem = {
-                            id: Date.now(),
-                            name: this.name,
-                            phone: this.phone,
-                            chief: this.chief
-                        }
-                        this.$emit('addElem', newElem)
-                    }
-                },
-                isNumber(evt) {
-                    evt = (evt) ? evt : window.event;
-                    var charCode = (evt.which) ? evt.which : evt.keyCode;
-                    if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-                        evt.preventDefault();
-                    } else {
-                        return true;
-                    }
-                },
-                addChief(value) {
-                    this.chief = value;
-                },
-                selectedOption(option) {
-                    this.selected=option.name;
-                    console.log(this.selected);
-                }
             }
+        },
+        components: {
+            ModalSelect,
+            Close,
+        },
+        methods: {
+            closeModal() {
+                this.$emit('closeModal')
+            },
+            onSubmit() {
+                this.$emit('onSubmit')
+                this.$emit('closeModal')
+                if (this.name.trim() && this.phone.trim() && (this.name.length > 0) && (this.phone.length > 0)) {
+                    const newElem = {
+                        id: Date.now(),
+                        name: '• ' + this.name,
+                        phone: this.phone,
+                        chief: this.chief,
+                        children: [],
+                    }
+                    this.$emit('addElem', newElem);
+                }
+                //если чиф совпадает с номером ид хоть одного элемента, то это его чаилд
+            },
+            isNumber(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                    evt.preventDefault();
+                } else {
+                    return true;
+                }
+            },
+            selectedOption(option, value) {
+                this.selected = option.name;
+                this.chief = value;
+            },
+            selectedChild(child, value) {
+                this.selected = child.name;
+                this.chief = value;
+            },
         }
+    }
 </script>
 
 <style>

@@ -3,16 +3,26 @@
     <p class="modal__select_title" @click="areOptionsVisible = !areOptionsVisible">{{selected}} <i
         class="material-icons modal__select_icon">expand_more</i></p>
     <div class="modal__select_options" v-if="areOptionsVisible">
-      <p class="modal__select_option" v-for="option in options" :key="option.id" @click="selectOption(option)">
+      <span class="modal__select_option" v-for="option in options" :key="option.id" @click="selectOption(option)">
         {{option.name}}
-      </p>
+      </span>
+      <span class="modal__select_option" v-for="child in children" :key="child.id" @click="selectChild(child)">
+        {{child.name}}
+      </span>
     </div>
   </div>
 </template>
 
 <script>
   export default {
+    name: 'ModalSelect',
     props: {
+      children: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
       options: {
         type: Array,
         default () {
@@ -30,16 +40,15 @@
       }
     },
     methods: {
-      clickOption(value) {
-        // console.log(value);
-        this.$emit('addChief', value)
-      },
       selectOption(option) {
-        console.log(option.id);
-        this.$emit('selectedOption', option)
+        this.$emit('selectedOption', option, option.id)
+        this.areOptionsVisible = false;
+      },
+      selectChild(child) {
+        this.$emit('selectedChild', child, child.id)
         this.areOptionsVisible = false;
       }
-    }
+    },
   }
 </script>
 
@@ -107,8 +116,9 @@
     text-align: left;
     cursor: pointer;
   }
+
   .modal__select_option:hover {
     background: #ededff;
-    color:var(--text-color);
+    color: var(--text-color);
   }
 </style>

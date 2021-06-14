@@ -17,14 +17,15 @@
                                 <i class="material-icons icon_sort" v-if="unsortedPhone">expand_less</i>
                             </div>
                         </div>
-                        <Element v-for="(elem) in elems" :key="elem.id" :name="elem.name"
-                            :phone="elem.phone" :chief="elem.chief" :children="elem.children" />
+                        <Element v-for="(elem) in elems" :key="elem.id" :name="elem.name" :phone="elem.phone"
+                            :chief="elem.chief" :children="elem.children" />
                     </div>
                     <Btn @click="openModal" />
                 </div>
             </div>
         </main>
-        <Modal :elems="elems" v-if="modalIsOpen" @closeModal="closeModal" @addElem="addElem" />
+        <Modal :elems="elems" :children="children" v-if="modalIsOpen" @closeModal="closeModal" @click="modalChildren"
+            @addElem="addElem" />
     </div>
 </template>
 
@@ -42,6 +43,7 @@
                 unsortedName: false,
                 sortedPhone: true,
                 unsortedPhone: false,
+                children: [],
                 elems: [{
                         id: 1,
                         name: 'Алексей',
@@ -49,28 +51,25 @@
                         chief: '',
                         children: [{
                             id: 10,
-                            name: 'Камиль',
+                            name: '• Камиль',
                             phone: '89999990002',
                             chief: 'Алексей',
-                            children: [{
-                            id: 10,
-                            name: 'Камиль',
-                            phone: '89999990002',
-                            chief: 'Алексей',
-                            }]
+                            children: [],
                         }],
                     },
                     {
                         id: 2,
                         name: 'Михаил',
                         phone: '89995646767',
-                        chief: ''
+                        chief: '',
+                        children: [],
                     },
                     {
                         id: 3,
                         name: 'Евгения',
                         phone: '89266459890',
-                        chief: ''
+                        chief: '',
+                        children: [],
                     },
                 ]
             }
@@ -82,6 +81,16 @@
             Element,
         },
         methods: {
+            modalChildren() {
+                this.children = [];
+                this.elems.forEach(elem => {
+                    if (elem.children.length > 0) {
+                        for (let i = 0; i < elem.children.length; i++) {
+                            this.children.push(elem.children[i]);
+                        }
+                    }
+                });
+            },
             openModal() {
                 this.modalIsOpen = true;
             },
@@ -89,8 +98,30 @@
                 this.modalIsOpen = false;
             },
             addElem(elem) {
-                this.elems.push(elem);
-                this.saveElems();
+                if (elem.chief) {
+
+                    for (let i = 0; i < this.elems.length; i++) {
+
+
+                        if (elem.chief == this.elems[i].id) {
+
+                            this.elems[i].children.push(elem);
+                        }
+                    }
+                    for (let i = 0; i < this.children.length; i++) {
+
+
+                        if (elem.chief == this.children[i].id) {
+
+                            this.children[i].children.push(elem);
+                        }
+                    }
+                    this.saveElems();
+                } else {
+
+                    this.elems.push(elem);
+                    this.saveElems();
+                }
             },
             saveElems() {
                 let parsed = JSON.stringify(this.elems);
@@ -197,7 +228,7 @@
     }
 
     .table__el_title {
-        background: #f0f0ff;
+        color: #9f6ad4;
         border-top-left-radius: 6px;
         border-top-right-radius: 6px;
     }
